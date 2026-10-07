@@ -1,0 +1,84 @@
+name: Build FunctionScript
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install full Python3.11 with tkinter via Chocolatey
+        run: choco install python --version=3.11.9 -y
+        shell: powershell
+
+      - name: Refresh PATH
+        run: refreshenv
+        shell: powershell
+
+      - name: Install Nuitka
+        run: pip install nuitka
+        shell: powershell
+
+      - name: Build Windows EXE
+        run: python -m nuitka --standalone --enable-plugin=tk-inter FunctionScript.py
+        shell: powershell
+
+      - name: Upload windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FunctionScript-Win
+          path: FunctionScript.dist/
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system tk
+        run: sudo apt-get update && sudo apt-get install -y python3-tk
+
+      - name: Install nuitka
+        run: pip install nuitka
+
+      - name: Build Linux binary
+        run: |
+          python -m nuitka --standalone --enable-plugin=tk-inter FunctionScript.py
+      - name: Upload linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FunctionScript-Linux
+          path: FunctionScript.dist/
+
+  build-macos:
+    runs-on: macos-14
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install nuitka
+        run: pip install nuitka
+
+      - name: Build Mac app bundle
+        run: |
+          python -m nuitka --standalone --enable-plugin=tk-inter --macos-create-app-bundle FunctionScript.py
+      - name: Upload mac artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FunctionScript-Mac
+          path: FunctionScript.app/

@@ -1,0 +1,26 @@
+{
+    "theme":{
+        "keyword":{"foreground":"#FFAA00"},
+        "func":{"foreground":"#00FFFB"},
+        "INT":{"foreground":"#c367f1"},
+        "STR":{"foreground":"#07AD12"},
+        "ABC":{"foreground":"#6EB1FF"},
+        "B":{"foreground":"#C02A00"},
+        "c":{"foreground":"#8ced6e"},
+        "d":{"foreground":"#a1ddf5"}
+        
+    },
+    "patterns": [
+        {"tag":"keyword","regex":"\\b(JudgeIf|JudgeElse|define|take|put|loop|cycle|use)\\b"},
+        {"tag":"func","regex":"\\b(OutPut|IPT|scope|JAR_LIST|JAR_DICTIONARY|JAR_NUMBERS|JAR_DECIMALL|JAR_STRS|ADD_LISTS|MOVE_LISTS|CHANGE_LISTS|FIND_LISTS|ADD_DICTIONARY|MOVE_DICTIONARY|CHANGE_DICTIONARY|FIND_DICTIONARY|STRS_FIND|STRS_FINDMANY|FILE_READ|FILE_WRITE|STRSLIST|CHANGESTRS|RETURESTRS|TAKE)\\b"},
+        {"tag":"INT","regex":"\\b\\d+\\b"},
+        {"tag":"STR","regex":"(\"[^\"]*\"|'[^']*')"},
+        {"tag":"ABC","regex":"\\bdefine\\s+(\\w+)\\s*="},
+        {"tag":"B","regex":"<.*?>"},
+        {"tag":"c","regex":"end|pass|None|True|False"},
+        {"tag":"d","regex":"\\=|\\+|\\<|\\>|\\-|\\;|\\(|\\)|\\:|\\[|\\]"}
+      
+
+    ]
+
+}

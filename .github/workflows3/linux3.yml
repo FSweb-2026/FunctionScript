@@ -1,0 +1,43 @@
+name: Build Linux Single Binary
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies (tkinter + gcc编译器)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-tk gcc
+
+      - name: Install nuitka
+        run: |
+          python -m pip install --upgrade pip
+          pip install nuitka
+
+      - name: Nuitka 构建 单文件onefile（不再写--standalone！）
+        run: |
+          python -m nuitka \
+            --onefile \
+            --enable-plugin=tk-inter \
+            FunctionScript.py
+
+      - name: 检查构建产物，打印目录
+        run: ls -la
+
+      - name: Upload artifact（只上传这个单独二进制文件）
+        uses: actions/upload-artifact@v4
+        with:
+          name: FunctionScript-Linux-Binary
+          path: FunctionScript

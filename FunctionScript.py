@@ -1,13 +1,13 @@
 import sys
 import os
-#https://github.com/FSweb-2026/FunctionScript 
-    
-
+#https://github.com/FSweb-2026/FunctionScript    
+#https://github.com/FSweb-2026/FunctionScript/releases/tag/v0.0
 def a():
     pass
 import re
 
 VAR = {}
+'''
 def scope(int1,int2):
     return range(int1,int2)
 # 全局函数库
@@ -15,10 +15,12 @@ FUN = {}
 import json
 
 def JAR_LIST(A,T):
-        if T == True:
-            OutPut(list(A))
-        else:
-            list(A)
+    if T == True:
+        OutPut(list(A))
+    else:
+        list(A)
+        
+        
 
 def JAR_DICTIONARY(B,F):
         if F == True:
@@ -109,7 +111,7 @@ def RETURESTRS(strs,mode):
 
 def TAKE(dx):
     __import__(dx)
-
+'''
 #==================================================================================================
 '''
 root = None
@@ -212,6 +214,17 @@ root = tk.Tk()
 
 root.title('FunctionScript')
 root.geometry('1100x800')
+root.update_idletasks()
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+window_width = 1100
+window_height = 800
+position_x = max((screen_width - window_width) // 2, 0)
+position_y = max((screen_height - window_height) // 2, 0)
+root.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
+root.deiconify()
+root.lift()
+root.focus_force()
 
 
 code_box = tk.Text(root, font=("Menlo",12))
@@ -219,7 +232,7 @@ code_box.grid(row=1, column=0, sticky="nsew", padx=10, pady=5)
 
 
 def syntax_highlight():
-    print("=====高亮执行====")
+   
     import os, json, re
     base_dir = os.path.dirname(os.path.realpath(__file__))
     json_path = os.path.join(base_dir, "syntax.json")
@@ -252,7 +265,7 @@ def syntax_highlight():
                 c2 = m.end()
                 idx1 = f"{line_no}.{c1}"
                 idx2 = f"{line_no}.{c2}"
-                print(f"MATCH L{line_no} [{idx1} {idx2}] word={m.group()} tag={tag}")
+               
                 code_box.tag_add(tag, idx1, idx2)
 
 
@@ -441,7 +454,7 @@ def dedent_text(text):
 def scan_user_raw_code(raw_text):
     # Python原生关键字黑名单
     python_keywords = {
-        "None","and", "as", "assert", "async", "await",
+        "and", "as", "assert", "async", "await",
         "break", "class", "continue", "def", "del", "elif", "else",
         "except", "finally", "for", "from", "global", "if", "in",
         "is", "lambda", "nonlocal", "not", "or", "pass", "raise",
@@ -509,6 +522,10 @@ def run_code():
     code = re.sub(r'(\w+)\+\|\=(\w+)',r'\1 += \2',code)
     code = re.sub(r'^(\s*)(\w+)\+\|\=(\w+)',r'\1\2 += \3',code)
 
+    code = re.sub(r'(\w+)\-\|\=(\w+)',r'\1 -= \2',code)
+    code = re.sub(r'^(\s*)(\w+)\-\|\=(\w+)',r'\1\2 -= \3',code)
+    
+
 
     code = re.sub(r'\|\|skip\|\|',r'continue',code)
     code = re.sub(r'^(\s+)\|\|skip\|\|',r'\1continue',code)
@@ -545,8 +562,29 @@ def run_code():
     exec_env = {
         "OutPut": OutPut,
         "IPT": IPT,
-        "output_box": output_box
-        
+        "output_box": output_box,
+        "scope": scope,
+        "JAR_LIST": JAR_LIST,
+        "JAR_DICTIONARY": JAR_DICTIONARY,
+        "JAR_NUMBERS": JAR_NUMBERS,
+        "JAR_DECIMALL": JAR_DECIMALL,
+        "JAR_STRS": JAR_STRS,
+        "ADD_LISTS": ADD_LISTS,
+        "MOVE_LISTS": MOVE_LISTS,
+        "CHANGE_LISTS": CHANGE_LISTS,
+        "FIND_LISTS": FIND_LISTS,
+        "ADD_DICTIONARY": ADD_DICTIONARY,
+        "MOVE_DICTIONARY": MOVE_DICTIONARY,
+        "CHANGE_DICTIONARY": CHANGE_DICTIONARY,
+        "FIND_DICTIONARY": FIND_DICTIONARY,
+        "STRS_FIND": STRS_FIND,
+        "STRS_FINDMANY": STRS_FINDMANY,
+        "FILE_READ": FILE_READ,
+        "FILE_WRITE": FILE_WRITE,
+        "STRSLIST": STRSLIST,
+        "CHANGESTRS": CHANGESTRS,
+        "RETURESTRS": RETURESTRS,
+        "TAKE": TAKE
     }
     
     err_msg = ""
@@ -717,10 +755,113 @@ code_box.bind("<<Modified>>", on_modified)
 code_box.bind("<<Paste>>", lambda e:syntax_highlight())
 code_box.bind("<KeyRelease>", lambda e:syntax_highlight())
 
+
+def scope(int1,int2):
+    return range(int1,int2)
+# 全局函数库
+FUN = {}
+import json
+
+def JAR_LIST(A,T):
+    if T == True:
+        OutPut(list(A))
+    else:
+        list(A)
+        
+        
+
+def JAR_DICTIONARY(B,F):
+        if F == True:
+            OutPut(dict(B))
+        else:
+            dict(B)
+
+def JAR_NUMBERS(number,t):
+        if t == True:
+            OutPut(int(number))
+        else:
+            int(number)
+
+def JAR_DECIMALL(numbers,s):
+        if s == True:
+            OutPut(float(numbers))
+        else:
+            float(numbers)
+
+def JAR_STRS(Strs,T_f):
+        if T_f == True:
+            OutPut(str(Strs))
+        else:
+            str(Strs)
+
+
+#===========list===================
+def ADD_LISTS(lists,DS):
+    lists.append(DS)
+    OutPut(lists)
+        
+def MOVE_LISTS(lists,DS):
+    lists.pop(DS)
+    OutPut(lists)
+
+def CHANGE_LISTS(LISTS,DS,ints):
+    LISTS[ints] = DS
+    OutPut(LISTS)
+
+def FIND_LISTS(lists,ints,l):
+    if l == True:
+        OutPut(lists[ints])
+    else:
+        lists[ints]
+#+=======================================
+#============dict===================
+    
+def ADD_DICTIONARY(dicts,keys,values):
+    dicts[keys] = values
+
+def MOVE_DICTIONARY(dicts,keys):
+    dicts.pop(keys)
+
+def CHANGE_DICTIONARY(dicts,keys,values):
+    dicts[keys] = values
+
+def FIND_DICTIONARY(dicts,keys):
+    OutPut(dicts[keys])
+#==========================================
+def STRS_FIND(STR,INT,T_F):
+    if T_F == True:
+        OutPut(STR[INT])
+    else:
+        STR[INT]
+
+def STRS_FINDMANY(STR,INT1,INT2,t_f):
+    if t_f == True:
+        OutPut(STR[INT1:INT2])
+    else:
+        STR[INT1:INT2]
+
+def FILE_READ(file):
+    a = open(file=file,mode='r',encoding='utf-8')
+    print(a.read())
+    a.close 
+def FILE_WRITE(file,str):
+    a = open(file=file,mode='w',encoding='utf-8')
+    a.write(str)
+    a.close 
+def STRSLIST(strss,strs,stre):
+    print(str(strss)+str(strs)+str(stre))
+
+def CHANGESTRS(strs,mode):
+    OutPut(strs.encode(mode))
+
+def RETURESTRS(strs,mode):
+    OutPut(strs.decode(mode))
+
+def TAKE(dx):
+    __import__(dx)
+
+
 # 启动渲染一次
 syntax_highlight()
-
-
-
-tk.mainloop()
+root.mainloop()
 

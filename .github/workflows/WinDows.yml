@@ -19,10 +19,15 @@ jobs:
           cache: 'pip'
 
       - name: 安装 Nuitka
-        run: python -m pip install --upgrade pip; pip install nuitka
+        run: pip install --upgrade pip; pip install nuitka
+
+      - name: 安装 Dependency Walker
+        shell: cmd
+        run: choco install dependency-walker -y
 
       - name: Nuitka 打包
-        run: python -m nuitka --onefile --windows-console-mode=disable --python-flag=-O --include-data-file=syntax.json=syntax.json FunctionScript.py
+        shell: cmd
+        run: python -m nuitka --onefile --windows-console-mode=disable --python-flag=-O --enable-plugin=tk-inter --enable-option-dependent-executables-to-depend-on-pythldll64 --include-data-file=syntax.json=syntax.json FunctionScript.py
 
       - name: 上传成品 EXE
         uses: actions/upload-artifact@v4
